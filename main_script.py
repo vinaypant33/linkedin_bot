@@ -67,7 +67,7 @@ def UI():
 
     
     application_width = 890
-    application_height = 900
+    application_height = 625
 
     window_height  = main_window.winfo_screenheight()
     window_width  = main_window.winfo_screenwidth()
@@ -104,8 +104,8 @@ def UI():
 
     seperator_3  = btk.Separator(orient=btk.HORIZONTAL)
 
-    keywords_box  = btk.Entry(lower_middle_frame ,textvariable=keywords_var , width=84)
-    multiline_messagebox  = btk.Text(lower_middle_frame , width=30 , height= 30)
+    keywords_box  = btk.Entry(lower_middle_frame ,textvariable=keywords_var , width=90)
+    multiline_messagebox  = btk.Text(lower_middle_frame , width=85 , height=15 )
 
    
     start_button = btk.Button(main_window , text="Start" , bootstyle  = btk.SUCCESS , width=25)
@@ -145,7 +145,8 @@ def UI():
 
 
     lower_middle_frame.pack()
-    keywords_box.pack(side=tk.LEFT , padx=10 , pady=10 , anchor=tk.N)
+    keywords_box.pack(padx=10 , pady=10)
+    multiline_messagebox.pack(side=tk.LEFT , anchor=tk.NE  ,padx = 10 , pady = 10)
    
     seperator_3.pack(fill=tk.X , padx = 10)
     start_button.pack(side=tk.LEFT , padx=10 , pady=20 , anchor=tk.N)
