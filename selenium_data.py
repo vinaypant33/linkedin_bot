@@ -24,6 +24,23 @@ from ttkbootstrap.toast import ToastNotification # For showing the error message
 
 
 
+
+class selenium_class():
+
+    def __init__(self):
+        options  = webdriver.ChromeOptions()
+        options.add_experimental_option('detach', True)
+        options.add_argument("--disable-webrtc")  # Disable WebRTC
+        options.add_argument("--log-level=3")    # Reduce log verbosity
+
+        self.driver = webdriver.Chrome(options=options)
+        self.driver.get()
+
+
+
+
+
+
 def show_message(messsage, duration):
     toast = ToastNotification("Linkedin Bot" , message=messsage , duration=duration)
     toast.show_toast()

@@ -135,6 +135,7 @@ def UI():
     # Binding Controls : 
     username_entry.bind("<FocusIn>" , lambda x : username_entry.delete(0 , 190))
     password_entry.bind("<FocusIn>" , lambda x : clear_password_box())
+    keywords_box.bind("<FocusIn>" , lambda x :keywords_box.delete(0 , 100))
 
 
     
