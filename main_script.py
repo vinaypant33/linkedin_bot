@@ -63,11 +63,23 @@ def UI():
                 password_entry.configure(show="*")
     
     def seconds_scale_changed(x):
-        wait_seconds_value.configure(text=str(round(wait_seconds.get())) + " Seconds")           
+        wait_seconds_value.configure(text=str(round(wait_seconds.get())) + " Seconds")  
+
+
+    def selenium_bot_starting():
+        selenium_data.selenium_bot()
+        progressbar.step(1)
+        print(progressbar.variable.get())
+        
+
+
+    def stopping_selenium_bot():
+        selenium_data.stopping_bot()
+             
 
     
     application_width = 890
-    application_height = 625
+    application_height = 700
 
     window_height  = main_window.winfo_screenheight()
     window_width  = main_window.winfo_screenwidth()
@@ -76,11 +88,6 @@ def UI():
     y_location  = (window_height // 2) - ( application_height // 2)
 
     main_window.geometry(f"{application_width}x{application_height}+{x_location}+{y_location}")
-
-    ### Styles for te UI Controls : 
-    
-
-
 
 
     ## UI Based Functions ( Only for the UI based data )
@@ -108,10 +115,13 @@ def UI():
     multiline_messagebox  = btk.Text(lower_middle_frame , width=85 , height=15 )
 
    
-    start_button = btk.Button(main_window , text="Start" , bootstyle  = btk.SUCCESS , width=25)
-    stop_button = btk.Button(main_window , text="Stop" , bootstyle  = btk.DANGER , width=25)
+    start_button = btk.Button(main_window , text="Start" , bootstyle  = btk.SUCCESS , width=25 , command=selenium_bot_starting)
+    stop_button = btk.Button(main_window , text="Stop" , bootstyle  = btk.DANGER , width=25 , command=stopping_selenium_bot)
     reset_button = btk.Button(main_window , text="Reset" , bootstyle  = btk.WARNING , width=25)
 
+    # progressbar  = btk.Floodgauge(main_window , length=860 , maximum = 100 , value=10, orient=tk.HORIZONTAL , bootstyle="success-striped" , mode='determinate')
+    progressbar  = btk.Floodgauge(main_window , maximum=100 , mask="Progress {}%" , length=860 , value=0, bootstyle="dark" , mode='determinate')
+    
     
 
 
@@ -152,6 +162,8 @@ def UI():
     start_button.pack(side=tk.LEFT , padx=10 , pady=20 , anchor=tk.N)
     stop_button.pack(side=tk.LEFT , padx=10 , pady=20 , anchor=tk.N)
     reset_button.pack(side=tk.LEFT , padx=10 , pady=20 , anchor=tk.N)
+
+    progressbar.place(x  = 10 , y = 620)
 
     main_window.mainloop()
 
