@@ -52,7 +52,6 @@ def UI():
 
 
     def checkbuttonclicked():
-    
         if checkvar.get() == True:
             password_entry.configure(show="")
            
@@ -67,15 +66,29 @@ def UI():
 
 
     def selenium_bot_starting():
-        selenium_data.selenium_bot()
-        progressbar.step(1)
-        print(progressbar.variable.get())
+        if username_entry.get() == "" or password_entry.get() == "":
+            toast_message("Enter Username Password and other Fields to start the bot" , 3000)
+        elif round(wait_seconds.get()) == 0:
+            toast_message("Enter the waiting time also :" , 2000)
+        else:
+            username = username_entry.get()
+            password  = password_entry.get()
+            waiting_time  = round(wait_seconds.get())
+            global s_bot
+            s_bot  = selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time)
+            
+        
+        # progressbar.step(1)
+        # print(progressbar.variable.get())
         
 
 
     def stopping_selenium_bot():
         selenium_data.stopping_bot()
              
+    def closing_application():
+        main_thread.join()
+        sys.exit()
 
     
     application_width = 890
@@ -136,7 +149,7 @@ def UI():
     username_entry.bind("<FocusIn>" , lambda x : username_entry.delete(0 , 190))
     password_entry.bind("<FocusIn>" , lambda x : clear_password_box())
     keywords_box.bind("<FocusIn>" , lambda x :keywords_box.delete(0 , 100))
-
+    password_entry.bind("<keyRelease>" , checkbuttonclicked())
 
     
     # Pack the controls
@@ -165,6 +178,8 @@ def UI():
     reset_button.pack(side=tk.LEFT , padx=10 , pady=20 , anchor=tk.N)
 
     progressbar.place(x  = 10 , y = 620)
+
+    main_window.protocol("WM_DELETE_WINDOW", closing_application)
 
     main_window.mainloop()
 
