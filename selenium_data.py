@@ -113,15 +113,12 @@ class selenium_class():
         except Exception as save_file_error:
             show_message(f"Unable to save the file {save_file_error}")
         
-        
 
-
-
-        self.driver.close()
-
+        self.sending_requestes()
     
-
-
+    def sending_requestes(self):
+        for link in self.link_list:
+            print(link)
 
 
     def closing_browser(self):

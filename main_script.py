@@ -11,6 +11,7 @@ import threading
 import ttkbootstrap as btk
 from ttkbootstrap.toast import ToastNotification
 
+from ttkbootstrap.tooltip import ToolTip
 
 
 import selenium_data
@@ -45,13 +46,25 @@ def UI():
     username_var = btk.StringVar(value="Enter Username")
     password_var = btk.StringVar(value="Enter Password")
     checkvar  = btk.BooleanVar(value=False)
-    page_depth_variable  = btk.StringVar(value="Search Number of Pages")
-    retries_variable = btk.StringVar(value="Number of Retries")
+    page_depth_variable_initial  = btk.IntVar(value=0)
+    page_depth_variable_final  = btk.IntVar(value = 50)
+    retries_variable  = btk.IntVar(value  = 10)
+   
 
     keywords_var  = btk.StringVar(value="Enter Keywords Here")
 
 
     def checkbuttonclicked():
+        if checkvar.get() == True:
+            password_entry.configure(show="")
+           
+        elif checkvar.get() == False:
+            if password_entry.get() == "Enter Password":
+                pass
+            else:
+                password_entry.configure(show="*")
+
+    def check_button_check(x):
         if checkvar.get() == True:
             password_entry.configure(show="")
            
@@ -68,6 +81,8 @@ def UI():
     def selenium_bot_starting():
         if username_entry.get() == "" or password_entry.get() == "":
             toast_message("Enter Username Password and other Fields to start the bot" , 3000)
+        elif username_entry.get() == "Enter Username" or password_entry.get() == "Enter Password":
+            toast_message("Enter the actual Username and Password to Start" , 3000)
         elif round(wait_seconds.get()) == 0:
             toast_message("Enter the waiting time also :" , 2000)
         else:
@@ -112,10 +127,12 @@ def UI():
     middle_box  = btk.Frame(main_window , width=900 , height=70 )
 
 
-    page_depth  = btk.Spinbox(middle_box , from_=0 , to=1000  , textvariable=page_depth_variable)
+    page_depth_initial = btk.Spinbox(middle_box , from_=0 , to=1000 , textvariable=page_depth_variable_initial , width=12)
+    page_depth_final  = btk.Spinbox(middle_box , from_=0 , to = 1000 , textvariable=page_depth_variable_final , width= 12)
+    
     wait_seconds_value  = btk.Label(middle_box , text="0 Seconds" , width=10)
     wait_seconds  = btk.Scale(middle_box , from_= 0 , to=60 , length=200 , command=seconds_scale_changed)
-    retries_  = btk.Spinbox(middle_box , from_=0 , to=10 , textvariable=retries_variable )
+    retries_  = btk.Spinbox(middle_box , from_=0 , to=10 , width=12 , textvariable=retries_variable )
 
     seperator_2  = btk.Separator(orient=btk.HORIZONTAL)
 
@@ -148,7 +165,18 @@ def UI():
     username_entry.bind("<FocusIn>" , lambda x : username_entry.delete(0 , 190))
     password_entry.bind("<FocusIn>" , lambda x : clear_password_box())
     keywords_box.bind("<FocusIn>" , lambda x :keywords_box.delete(0 , 100))
-    password_entry.bind("<keyRelease>" , checkbuttonclicked())
+    password_entry.bind("<KeyRelease>" ,  check_button_check)
+
+
+    # Binding Control to make a tooltip : 
+    initial_depth_tooltip = ToolTip(page_depth_initial, text="Initial Page Count from Where the Count is to start" , bootstyle="light" , delay=500)
+    final_page_tooltip  = ToolTip(page_depth_final , text="Final Page Count till then the Bot shall scrap Urls" , bootstyle="light" , delay=500)
+    wait_seconds_tooltip = ToolTip(wait_seconds , text="Number of Seconds to Wait for Every Operation ( Login, Scrapping Etc.)" , bootstyle="light" , delay=500)
+    retries_tooltip = ToolTip( retries_ , text="Number of retries browser does before throiwing error " , bootstyle="light" ,delay=500)
+    multiline_messagebox_tooltip = ToolTip(multiline_messagebox , text="Enter Full Message Here with the spaces and Line Breaks ( Only Skip Hi, Hello it will be added by bot on its own ( with name ))" , bootstyle="light" , delay=500)
+
+
+    # password_tooltip = ToolTip(password_entry , text="Enter Linkedin Password" , )
 
     
     # Pack the controls
@@ -159,7 +187,8 @@ def UI():
     seperator.pack(fill="x" , padx=10)
 
     middle_box.pack()
-    page_depth.pack(side=tk.LEFT , anchor=tk.N ,pady=10  ,padx = 10)
+    page_depth_initial.pack(side=tk.LEFT , anchor=tk.N ,pady=10  ,padx = 10)
+    page_depth_final.pack(side=tk.LEFT , anchor=tk.N , pady=10 , padx=10)
     wait_seconds_value.pack(side=tk.LEFT , anchor=tk.N , pady=16 , padx =10)
     wait_seconds.pack(side=tk.LEFT , anchor=tk.N ,pady=20  ,padx = 10)
     retries_.pack(side=tk.RIGHT , anchor=tk.N , padx=10 , pady=10)
