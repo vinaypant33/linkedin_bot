@@ -48,7 +48,7 @@ def UI():
     page_depth_variable  = btk.StringVar(value="Search Number of Pages")
     retries_variable = btk.StringVar(value="Number of Retries")
 
-    keywords_var  = btk.StringVar(value="Enter Keywords")
+    keywords_var  = btk.StringVar(value="Enter Keywords Here")
 
 
     def checkbuttonclicked():
@@ -74,8 +74,7 @@ def UI():
             username = username_entry.get()
             password  = password_entry.get()
             waiting_time  = round(wait_seconds.get())
-            global s_bot
-            s_bot  = selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time)
+            selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time , keywords=keywords_box.get() , page_numbers=page_depth.get())
             
         
         # progressbar.step(1)
@@ -87,7 +86,7 @@ def UI():
         selenium_data.stopping_bot()
              
     def closing_application():
-        main_thread.join()
+        selenium_data.stopping_bot()
         sys.exit()
 
     

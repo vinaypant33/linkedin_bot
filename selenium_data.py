@@ -17,6 +17,9 @@ import pyautogui
 from bs4 import BeautifulSoup
 
 
+
+
+
 #### Constants : 
 working  = False
 progress_value  = 0
@@ -32,11 +35,15 @@ from ttkbootstrap.toast import ToastNotification # For showing the error message
 
 class selenium_class():
 
-    def __init__(self , username  , password  , waitseconds):
+    def __init__(self , username  , password  , waitseconds , keywords , page_numbers):
 
         self.username = username
         self.password  = password
         self.waitseconds  = waitseconds
+        self.keywords  = keywords
+        self.page_numebrs = int(page_numbers)
+        self.link_list  = []
+
 
 
         options  = webdriver.ChromeOptions()
@@ -60,7 +67,7 @@ class selenium_class():
             password.send_keys(self.password)
         except Exception as login_error:
             show_message(f"Login Error unable to find username or password filed {login_error}")
-            sys.exit
+            sys.exit()
 
         try:
             rememberbox  = self.driver.find_element(By.ID , "rememberMeOptIn-checkbox")
@@ -68,17 +75,49 @@ class selenium_class():
         except Exception as remember_click:
             show_message("Unable to Click the Remember Box" , 3000)
         
-
+        sleep(waitseconds)
         try:
 
             self.driver.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
-        
         except Exception as button_error:
             show_message("Unable to click the button ( Exiting Program )" , 2000)
+            self.driver.close()
             sys.exit()
         
-        sleep(waitseconds)
 
+        try:
+            self.driver.minimize_window()
+        ### Searching pages for the Urls :
+            for i in range(self.page_numebrs):
+                self.driver.get(f"https://www.linkedin.com/search/results/people/?keywords={self.keywords}&page={i}")
+                sleep(self.waitseconds / 3)
+                source  = self.driver.page_source
+                soup = BeautifulSoup(source, 'html.parser')
+                links = soup.find_all('a')
+                for link in links:
+                    href = link.get('href')
+                    if href :
+                        if "www.linkedin.com/in/" in href:
+                            self.link_list.append(href)
+        except Exception as visit_error:
+            show_message(f"Link Save Error : {visit_error}")
+    
+            
+
+        self.link_list =  list(set(self.link_list))
+
+        try:
+            with open("link_file.txt", "w") as file:
+                for line in self.link_list:
+                    file.write(line + "\n")
+        except Exception as save_file_error:
+            show_message(f"Unable to save the file {save_file_error}")
+        
+        
+
+
+
+        self.driver.close()
 
     
 
@@ -104,14 +143,13 @@ def show_message(messsage, duration):
 
 
 
-def selenium_bot(username, password , wait_seconds):
-
+def selenium_bot(username, password , wait_seconds , keywords , page_numbers):
     global working
     if not working:
         working = True
         show_message("Starting Bot :" , 2000)
-       
-        threading.Thread(selenium_class(username=username , password=password , waitseconds=wait_seconds ) , daemon=True).start()
+        sleep(3)
+        threading.Thread(selenium_class(username=username , password=password , waitseconds=wait_seconds , keywords=keywords , page_numbers=page_numbers ) , daemon=True).start()
         # selenium_class(username=username , password=password , waitseconds=wait_seconds)
     else:
         show_message("Bot Already Working" , 3000)
@@ -121,6 +159,8 @@ def stopping_bot():
     global working
     working  = False
     show_message("Stopping Linkedin Bot" , 3000)
+    sys.exit()
+    
 
 
 
