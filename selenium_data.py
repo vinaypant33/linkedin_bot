@@ -12,14 +12,9 @@ import sys
 import time
 import threading
 
-
 import pyautogui
 from bs4 import BeautifulSoup
-
 from ttkbootstrap.toast import ToastNotification # For showing the error messages
-
-
-from tkinter import messagebox
 
 
 
@@ -33,22 +28,16 @@ connect_button_image  = "connect.png"
 more_button_image = "more.png"
 second_connect_button  = "second_connect.png"
 
+
+
+# Threading Event which woudl be used to exit from the thread #### 
 stop_event  = threading.Event()
 
 
 
 class selenium_class():
-
-    # def locate_image_once_with_timeout(self , image_path, timeout=5):
-    #     start_time = time.time()
-    #     location = None  # Initialize location to None
-    #     location = pyautogui.locateOnScreen(image_path)
-    #     while time.time() - start_time < timeout:
-    #         if location:  # If image is found, exit the loop
-    #             break
-    #         time.sleep(0.1)  # Add a small delay to avoid busy-waiting
-    #     return location
-
+    
+    # Function to save the Errors in text file ### 
     def error_file_working(self , error_message):
         with open("error_file.txt", "w") as file:
                 file.write(error_message + "\n")
@@ -74,6 +63,7 @@ class selenium_class():
         self.driver = webdriver.Chrome(options=options)
 
 
+        #### Try Catch block to Login 
         try:
             self.driver.get("https://www.linkedin.com/checkpoint/rm/sign-in-another-account")
             self.driver.maximize_window()
@@ -90,6 +80,9 @@ class selenium_class():
             self.driver.close()
             sys.exit()
         
+
+        ### Try catch block to serach to the inserted keywords and then save the link in a list 
+
         try:
             for i in range(self.page_numebrs):
                 self.driver.get(f"https://www.linkedin.com/search/results/people/?keywords={self.keywords}&page={i}")
@@ -115,6 +108,7 @@ class selenium_class():
             sys.exit()
         
 
+        #### Iterate from list and with each item try to connect with the user with the custom message #### 
       
         for link in self.link_list:
                 pyautogui.moveTo(300 , 300 , 1)
@@ -149,14 +143,14 @@ class selenium_class():
                     self.error_file_working(f"Unable to find the connect button : {connect_error} :: {time.time()}")
     
 
-        
+        ### Where connect button is not visible it saves those links in another list ###
         for link in self.failed_link_files:
             with open("failed_links.txt", "w") as file:
                 for line in self.failed_link_files:
                     file.write(line + "\n")
 
 
-
+        ### Failed links to be tried again with another button approach #### 
         for link in self.failed_link_files:
             pyautogui.moveTo(300 , 300 , 1)
             sleep(2)
@@ -189,139 +183,7 @@ class selenium_class():
             except Exception as final_error:
                     self.error_file_working(f"Final Error : {final_error} :: {time.time()}")
 
-        
-
-
         self.closing_browser()
-
-
-
-        # try:
-        #     self.driver.get("https://www.linkedin.com/checkpoint/rm/sign-in-another-account")
-        # except Exception as driver_error:
-        #     show_message(f"Unable to Start Selenium Driver for Chrome {driver_error}")
-
-        # self.driver.maximize_window()
-
-        # try:
-        #     username  = self.driver.find_element(By.ID , "username")
-        #     username.send_keys(self.username)
-        #     password  = self.driver.find_element(By.ID , "password")
-        #     password.send_keys(self.password)
-        # except Exception as login_error:
-        #     show_message(f"Login Error unable to find username or password filed {login_error}")
-        #     sys.exit()
-
-        # try:
-        #     rememberbox  = self.driver.find_element(By.ID , "rememberMeOptIn-checkbox")
-        #     rememberbox.click()
-        # except Exception as remember_click:
-        #     show_message("Unable to Click the Remember Box" , 3000)
-        
-        # sleep(waitseconds)
-        # try:
-
-        #     self.driver.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
-        # except Exception as button_error:
-        #     show_message("Unable to click the button ( Exiting Program )" , 2000)
-        #     self.driver.close()
-        #     sys.exit()
-        
-
-        # try:
-        #     self.driver.minimize_window()
-        # ### Searching pages for the Urls :
-        #     for i in range(self.page_numebrs):
-        #         self.driver.get(f"https://www.linkedin.com/search/results/people/?keywords={self.keywords}&page={i}")
-        #         sleep(self.waitseconds / 3)
-        #         source  = self.driver.page_source
-        #         soup = BeautifulSoup(source, 'html.parser')
-        #         links = soup.find_all('a')
-        #         for link in links:
-        #             href = link.get('href')
-        #             if href :
-        #                 if "www.linkedin.com/in/" in href:
-        #                     self.link_list.append(href)
-        # except Exception as visit_error:
-        #     show_message(f"Link Save Error : {visit_error}")
-    
-            
-
-        # self.link_list =  list(set(self.link_list))
-
-        # try:
-        #     with open("link_file.txt", "w") as file:
-        #         for line in self.link_list:
-        #             file.write(line + "\n")
-        # except Exception as save_file_error:
-        #     show_message(f"Unable to save the file {save_file_error}")
-        
-        # self.driver.maximize_window()
-
-        # try:
-        #     for link in self.link_list:
-        #         self.driver.get(link)
-        #         # sleep(2)
-        #         try:
-        #             location = pyautogui.locateCenterOnScreen(connect_button_image , confidence=0.9 , minSearchTime=1)
-        #         except Exception as error:
-        #             show_message("Link Search Error" , 2000)
-        #         if location:
-        #             print("Found Data")
-        #         else:
-        #             print("Not Found")
-        #         location = None
-        # except Exception as link_error:
-        #     show_message(f"Link Error : {link_error}" , 2000)
-        
-        
-
-        # try:
-        #     for link in self.link_list:
-        #         self.driver.get(link)
-        #         current_time  = time.time()
-        #         while time.time() - current_time < 10:
-        #             print("Cecking it ")
-        #         print("Time Up and done")
-        # except Exception as link_error:
-        #     show_message(f"Link Error :{link_error}")
-    
-    # def sending_requestes(self):
-    #     try:
-    #         for link in self.link_list:
-    #             self.driver.get(link)
-    #             sleep(2)
-    #             location  = self.locate_image_once_with_timeout(connect_button_image , 5)
-    #             if location:
-    #                 print("Found Data")
-    #             else:
-    #                 print("Not Found")
-    #             start_time  = time.time()
-    #             while time.time() - start_time < 10 :
-    #                 connect_button_coordinates  = pyautogui.locateOnScreen(connect_button_image , confidence=0.9)
-    #                 if connect_button_coordinates:
-    #                     pyautogui.moveTo(connect_button_coordinates.left , connect_button_coordinates.top , duration=2)
-    #                 else:
-    #                     pyautogui.moveTo(848 , 936 , duration=2)
-                
-    #             try:
-    #                 start_time  = time.time()  ### making a timeput as the pyautogui keeps on searching for the button and takes a lot of time in that
-    #                 while time.time() - start_time < 10:
-    #                     connect_coordinates  = pyautogui.locateOnScreen(connect_button_image , confidence=0.9 , region=(412 , 835 , 652 , 979))
-    #                     pyautogui.moveTo(connect_coordinates.left , connect_coordinates.top , duration=2)
-    #                     pyautogui.click()
-    #                 show_message("Timeout Reached Moving to another profile :" , 2000)
-    #             except Exception as connect_button_error:
-    #                 show_message(f"Connect Button Error  {connect_button_error}")
-    #                 try:
-    #                     while time.time() - start_time  < 10:
-    #                         more_button_coordinates  = pyautogui.locateOnScreen(more_button_image , confidence=0.9 , region=(412 , 835 , 652 , 979))
-    #                         print(more_button_coordinates)
-    #                     show_message("Timeout Reached Unable to find the connect button" , 2000)    
-    #                 except Exception as more_button_error:
-    #                     show_message(f"More Button Error : {more_button_error}")
-    #     except Exception as link_error:
-    #         show_message("Link Error"  ,2000)
 
 
 
@@ -330,15 +192,12 @@ class selenium_class():
         sys.exit()
         
 
-
-
-
 def show_message(messsage, duration):
     toast = ToastNotification("Linkedin Bot" , message=messsage , duration=duration)
     toast.show_toast()
 
 
-
+#### Function which is called from main script and parameters are passed into it :: which in turn calls the class with the specified arguments #### 
 def selenium_bot(username, password , wait_seconds , keywords , page_numbers  , message_string):
     global working
     if not working:
@@ -353,6 +212,7 @@ def selenium_bot(username, password , wait_seconds , keywords , page_numbers  , 
         show_message("Bot Already Working" , 3000)
 
 
+### Function to stop the bot ### 
 def stopping_bot():
     global working
     working  = False

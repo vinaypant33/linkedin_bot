@@ -93,12 +93,7 @@ def UI():
            
             selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time , keywords=keywords_box.get() , page_numbers=page_depth_final.get() , message_string = actual_message)
             
-        
-        # progressbar.step(1)
-        # print(progressbar.variable.get())
-        
-
-
+    # Trial to stop the running bot ### 
     def stopping_selenium_bot():
         selenium_data.stopping_bot()
              
@@ -106,7 +101,7 @@ def UI():
         selenium_data.stopping_bot()
         sys.exit()
 
-    
+    ######### ------ Initial App Details ##########
     application_width = 890
     application_height = 700
 
@@ -157,21 +152,21 @@ def UI():
     
 
 
-    # Configure Controls : 
+    ##############---------------- Configure Controls : 
     upper_box.pack_propagate(0)
     middle_box.pack_propagate(0)
     lower_middle_frame.pack_propagate(0)
 
     
 
-    # Binding Controls : 
+    ################-------------  Binding Controls : 
     username_entry.bind("<FocusIn>" , lambda x : username_entry.delete(0 , 190))
     password_entry.bind("<FocusIn>" , lambda x : clear_password_box())
     keywords_box.bind("<FocusIn>" , lambda x :keywords_box.delete(0 , 100))
     password_entry.bind("<KeyRelease>" ,  check_button_check)
 
 
-    # Binding Control to make a tooltip : 
+    #################------------- Binding Control to make a tooltip : 
     initial_depth_tooltip = ToolTip(page_depth_initial, text="Initial Page Count from Where the Count is to start" , bootstyle="light" , delay=500)
     final_page_tooltip  = ToolTip(page_depth_final , text="Final Page Count till then the Bot shall scrap Urls" , bootstyle="light" , delay=500)
     wait_seconds_tooltip = ToolTip(wait_seconds , text="Number of Seconds to Wait for Every Operation ( Login, Scrapping Etc.)" , bootstyle="light" , delay=500)
@@ -179,10 +174,8 @@ def UI():
     multiline_messagebox_tooltip = ToolTip(multiline_messagebox , text="Enter Full Message Here with the spaces and Line Breaks ( Only Skip Hi, Hello it will be added by bot on its own ( with name ))" , bootstyle="light" , delay=500)
 
 
-    # password_tooltip = ToolTip(password_entry , text="Enter Linkedin Password" , )
-
     
-    # Pack the controls
+    ###########-------------- Packing Controls 
     upper_box.pack(padx=0 , pady=0 , anchor="n")
     username_entry.pack(side=tk.LEFT , anchor=tk.N , pady=10 , padx = 10)
     password_entry.pack(side=tk.LEFT , anchor=tk.N , pady=10 , padx= 10)
@@ -219,7 +212,7 @@ def UI():
 
 
 
-######___________ Main Code ___________#########
+######___________ Main ( Initiation of the Code ) ___________#########
 if __name__ == '__main__':
     main_thread  = threading.Thread(target=UI)
     main_thread.start()
