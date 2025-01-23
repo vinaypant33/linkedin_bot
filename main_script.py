@@ -39,7 +39,7 @@ def UI():
         sleep(1 / 4)
         password_entry.configure(show="*")
     
-    main_window  = btk.Window(title="Linkedin Bot" , themename="minty" , resizable=(0 , 0))
+    main_window  = btk.Window(title="Linkedin Bot" , themename="cyborg" , resizable=(0 , 0))
 
 
 
@@ -51,7 +51,7 @@ def UI():
     retries_variable  = btk.IntVar(value  = 10)
    
 
-    keywords_var  = btk.StringVar(value="Enter Keywords Here")
+    keywords_var  = btk.StringVar(value="HR India")
 
 
     def checkbuttonclicked():
@@ -89,7 +89,9 @@ def UI():
             username = username_entry.get()
             password  = password_entry.get()
             waiting_time  = round(wait_seconds.get())
-            selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time , keywords=keywords_box.get() , page_numbers=page_depth_final.get())
+            actual_message  = str(multiline_messagebox.get("1.0", "end-1c"))
+           
+            selenium_data.selenium_bot(username=username , password = password , wait_seconds=waiting_time , keywords=keywords_box.get() , page_numbers=page_depth_final.get() , message_string = actual_message)
             
         
         # progressbar.step(1)
@@ -130,8 +132,9 @@ def UI():
     page_depth_initial = btk.Spinbox(middle_box , from_=0 , to=1000 , textvariable=page_depth_variable_initial , width=12)
     page_depth_final  = btk.Spinbox(middle_box , from_=0 , to = 1000 , textvariable=page_depth_variable_final , width= 12)
     
-    wait_seconds_value  = btk.Label(middle_box , text="0 Seconds" , width=10)
+    
     wait_seconds  = btk.Scale(middle_box , from_= 0 , to=60 , length=200 , command=seconds_scale_changed , value=6)
+    wait_seconds_value  = btk.Label(middle_box , text=f"{wait_seconds.get()} Seconds" , width=10)
     retries_  = btk.Spinbox(middle_box , from_=0 , to=10 , width=12 , textvariable=retries_variable )
 
     seperator_2  = btk.Separator(orient=btk.HORIZONTAL)

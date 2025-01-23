@@ -19,6 +19,8 @@ from bs4 import BeautifulSoup
 from ttkbootstrap.toast import ToastNotification # For showing the error messages
 
 
+from tkinter import messagebox
+
 
 
 #### Constants : 
@@ -29,26 +31,29 @@ progress_text = "I am Progress Text"
 # Here the Images to be imported : 
 connect_button_image  = "connect.png"
 more_button_image = "more.png"
+second_connect_button  = "second_connect.png"
 
 stop_event  = threading.Event()
 
 
 
-
-
 class selenium_class():
 
-    def locate_image_once_with_timeout(self , image_path, timeout=5):
-        start_time = time.time()
-        location = None  # Initialize location to None
-        location = pyautogui.locateOnScreen(image_path)
-        while time.time() - start_time < timeout:
-            if location:  # If image is found, exit the loop
-                break
-            time.sleep(0.1)  # Add a small delay to avoid busy-waiting
-        return location
+    # def locate_image_once_with_timeout(self , image_path, timeout=5):
+    #     start_time = time.time()
+    #     location = None  # Initialize location to None
+    #     location = pyautogui.locateOnScreen(image_path)
+    #     while time.time() - start_time < timeout:
+    #         if location:  # If image is found, exit the loop
+    #             break
+    #         time.sleep(0.1)  # Add a small delay to avoid busy-waiting
+    #     return location
 
-    def __init__(self , username  , password  , waitseconds , keywords , page_numbers ):
+    def error_file_working(self , error_message):
+        with open("error_file.txt", "w") as file:
+                file.write(error_message + "\n")
+
+    def __init__(self , username  , password  , waitseconds , keywords , page_numbers , message_string):
 
         self.username = username
         self.password  = password
@@ -56,6 +61,8 @@ class selenium_class():
         self.keywords  = keywords
         self.page_numebrs = int(page_numbers)
         self.link_list  = []
+        self.failed_link_files = []
+        self.message_string  = message_string
 
 
 
@@ -74,11 +81,13 @@ class selenium_class():
             username.send_keys(self.username)
             password  = self.driver.find_element(By.ID , "password")
             password.send_keys(self.password)
-            sleep(waitseconds)
+            sleep(waitseconds // 2)
             self.driver.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
-        except Exception as login_error:
-            show_message(f"Login Error Unable to login Exiting Program" , 4000)
             sleep(waitseconds)
+        except Exception as login_error:
+            self.error_file_working(f"Login Error Unable to Login and Exiting Program :{login_error} ::  {time.time()}")
+            sleep(waitseconds)
+            self.driver.close()
             sys.exit()
         
         try:
@@ -100,33 +109,90 @@ class selenium_class():
                 for line in self.link_list:
                     file.write(line + "\n")
         except Exception as link_error:
-            show_message(f"Link Error {link_error}" , 5000)
+            self.error_file_working(f"Link Error {link_error} :: {time.time()}")
             sleep(waitseconds)
+            self.driver.close()
             sys.exit()
         
 
       
         for link in self.link_list:
+                pyautogui.moveTo(300 , 300 , 1)
+                sleep(2)
                 self.driver.get(link)
+                sleep(2)
                 try:
                     location = pyautogui.locateOnScreen(connect_button_image , confidence=0.9)
-                    pyautogui.moveTo(location.left + 30 , location.top + 30 , 3)
-                    pyautogui.click()
-                    # print(location)
+                    if location:
+                        pyautogui.moveTo(location.left + 50 , location.top + 40 , 1)
+                        pyautogui.click()
+                        pyautogui.moveTo(1287 , 550 , 1)
+                        pyautogui.click()
+                        try:
+                            name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
+                            name = name_element.get_attribute('innerText')
+                            hi_text  = f"Hi {name},"
+                        except Exception as name_error:
+                            self.error_file_working(f"Unable to get the name of the User : {time.time()}")
+                            hi_text = "Hi,"
+                        pyautogui.write(hi_text)
+                        pyautogui.press("enter")
+                        pyautogui.write(self.message_string)
+                        sleep(self.waitseconds // 2)
+                        pyautogui.moveTo(1614 , 771, 1)
+                        pyautogui.click()
+                    else:
+                        self.failed_link_files.append(link)
                     sleep(waitseconds)
                 except Exception as connect_error:
-                    show_message(f"Unable to find the connect button trying second method : {connect_error}" , 5000)
-                    try:
-                        more_button_location  = pyautogui.locateCenterOnScreen(more_button_image , confidence=0.9)
-                        pyautogui.moveTo(more_button_location.left + 30, more_button_location.top + 30 , 2)
-                        pyautogui.click()
-                        # print(more_button_location)
-                        sleep(waitseconds)
-                    except Exception as move_to_error:
-                        show_message(f"Unable to locate any buttons {move_to_error}" , 5000)
-                        
+                    sleep(1)
+                    self.error_file_working(f"Unable to find the connect button : {connect_error} :: {time.time()}")
     
 
+        
+        for link in self.failed_link_files:
+            with open("failed_links.txt", "w") as file:
+                for line in self.failed_link_files:
+                    file.write(line + "\n")
+
+
+
+        for link in self.failed_link_files:
+            pyautogui.moveTo(300 , 300 , 1)
+            sleep(2)
+            self.driver.get(link)
+            sleep(2)
+            try:
+                move_to_location = pyautogui.locateOnScreen(more_button_image , confidence=0.9)
+                if move_to_location:
+                    pyautogui.moveTo(move_to_location.left + 50 , move_to_location.top + 40 , 1)
+                    pyautogui.click()
+                    # pyautogui.moveTo(910 ,1196 , 2)
+                    another_location  = pyautogui.locateOnScreen(second_connect_button , confidence=0.9)
+                    pyautogui.moveTo(another_location.left + 10 , another_location.top + 10 , 1)
+                    pyautogui.click()
+                    pyautogui.moveTo(1287 , 550 , 1)
+                    pyautogui.click()
+                    try:
+                        name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
+                        name = name_element.get_attribute('innerText')
+                        hi_text  = f"Hi {name},"
+                    except Exception as name_error:
+                        self.error_file_working(f"Unable to get the name of the User : {time.time()}")
+                        hi_text = "Hi,"
+                    pyautogui.write(hi_text)
+                    pyautogui.press("enter")
+                    pyautogui.write(self.message_string)
+                    sleep(self.waitseconds // 2)
+                    pyautogui.moveTo(1614 , 771, 1)
+                    pyautogui.click()
+            except Exception as final_error:
+                    self.error_file_working(f"Final Error : {final_error} :: {time.time()}")
+
+        
+
+
+        self.closing_browser()
 
 
 
@@ -263,11 +329,6 @@ class selenium_class():
         self.driver.close()
         sys.exit()
         
-        
-
-        
-
-
 
 
 
@@ -278,14 +339,14 @@ def show_message(messsage, duration):
 
 
 
-def selenium_bot(username, password , wait_seconds , keywords , page_numbers):
+def selenium_bot(username, password , wait_seconds , keywords , page_numbers  , message_string):
     global working
     if not working:
         working = True
         show_message("Starting Bot :" , 2000)
         sleep(3)
         # threading.Thread(selenium_class(username=username , password=password , waitseconds=wait_seconds , keywords=keywords , page_numbers=page_numbers ) , daemon=True).start()
-        selenium_class(username=username , password=password , waitseconds=wait_seconds  , keywords=keywords , page_numbers=page_numbers)
+        selenium_class(username=username , password=password , waitseconds=wait_seconds  , keywords=keywords , page_numbers=page_numbers , message_string=message_string)
 
         # selenium_class(username=username , password=password , waitseconds=wait_seconds)
     else:
