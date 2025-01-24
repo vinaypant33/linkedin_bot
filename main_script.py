@@ -39,7 +39,7 @@ def UI():
         sleep(1 / 4)
         password_entry.configure(show="*")
     
-    main_window  = btk.Window(title="Linkedin Bot" , themename="cyborg" , resizable=(0 , 0))
+    main_window  = btk.Window(title="Linkedin Bot" , themename="darkly" , resizable=(0 , 0))
 
 
 
@@ -51,7 +51,7 @@ def UI():
     retries_variable  = btk.IntVar(value  = 10)
    
 
-    keywords_var  = btk.StringVar(value="HR India")
+    keywords_var  = btk.StringVar(value="Enter Keywords")
 
 
     def checkbuttonclicked():

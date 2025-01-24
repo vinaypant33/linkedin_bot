@@ -27,7 +27,7 @@ progress_text = "I am Progress Text"
 connect_button_image  = "connect.png"
 more_button_image = "more.png"
 second_connect_button  = "second_connect.png"
-
+add_note_button   = "add_note.png"
 
 
 # Threading Event which woudl be used to exit from the thread #### 
@@ -112,27 +112,33 @@ class selenium_class():
       
         for link in self.link_list:
                 pyautogui.moveTo(300 , 300 , 1)
-                sleep(2)
+                sleep(1)
                 self.driver.get(link)
-                sleep(2)
+                sleep(3)
+                try:
+                            name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
+                            name = name_element.get_attribute('innerText')
+                            hi_text  = f"Hi {name},"
+                except Exception as name_error:
+                            self.error_file_working(f"Unable to get the name of the User : {link} :: {time.time()}")
+                            hi_text = "Hi,"
                 try:
                     location = pyautogui.locateOnScreen(connect_button_image , confidence=0.9)
                     if location:
                         pyautogui.moveTo(location.left + 50 , location.top + 40 , 1)
                         pyautogui.click()
-                        pyautogui.moveTo(1287 , 550 , 1)
+                        pyautogui.moveTo(1283 , 532 , 1)
+                        # note_location  = pyautogui.locateOnScreen(add_note_button , confidence=0.9)
+                        # pyautogui.moveTo(note_location.left + 30 , note_location.top + 30 , 1)
                         pyautogui.click()
-                        try:
-                            name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
-                            name = name_element.get_attribute('innerText')
-                            hi_text  = f"Hi {name},"
-                        except Exception as name_error:
-                            self.error_file_working(f"Unable to get the name of the User : {time.time()}")
-                            hi_text = "Hi,"
+                        
+                        sleep(2)
                         pyautogui.write(hi_text)
+                        sleep(3)
                         pyautogui.press("enter")
+                        sleep(2)
                         pyautogui.write(self.message_string)
-                        sleep(self.waitseconds // 2)
+                        sleep(5)
                         pyautogui.moveTo(1614 , 771, 1)
                         pyautogui.click()
                     else:
@@ -153,37 +159,38 @@ class selenium_class():
         ### Failed links to be tried again with another button approach #### 
         for link in self.failed_link_files:
             pyautogui.moveTo(300 , 300 , 1)
-            sleep(2)
+            sleep(1)
             self.driver.get(link)
-            sleep(2)
+            sleep(3)
+            try:
+                        name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
+                        name = name_element.get_attribute('innerText')
+                        hi_text  = f"Hi {name},"
+            except Exception as name_error:
+                        self.error_file_working(f"Unable to get the name of the User : {time.time()}")
+                        hi_text = "Hi,"
             try:
                 move_to_location = pyautogui.locateOnScreen(more_button_image , confidence=0.9)
                 if move_to_location:
                     pyautogui.moveTo(move_to_location.left + 50 , move_to_location.top + 40 , 1)
                     pyautogui.click()
-                    # pyautogui.moveTo(910 ,1196 , 2)
+                    pyautogui.moveTo(910 ,1196 , 2)
                     another_location  = pyautogui.locateOnScreen(second_connect_button , confidence=0.9)
                     pyautogui.moveTo(another_location.left + 10 , another_location.top + 10 , 1)
                     pyautogui.click()
                     pyautogui.moveTo(1287 , 550 , 1)
                     pyautogui.click()
-                    try:
-                        name_element = self.driver.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
-                        name = name_element.get_attribute('innerText')
-                        hi_text  = f"Hi {name},"
-                    except Exception as name_error:
-                        self.error_file_working(f"Unable to get the name of the User : {time.time()}")
-                        hi_text = "Hi,"
+                    sleep(2)
                     pyautogui.write(hi_text)
+                    sleep(3)
                     pyautogui.press("enter")
+                    sleep(2)
                     pyautogui.write(self.message_string)
-                    sleep(self.waitseconds // 2)
+                    sleep(5)
                     pyautogui.moveTo(1614 , 771, 1)
                     pyautogui.click()
             except Exception as final_error:
                     self.error_file_working(f"Final Error : {final_error} :: {time.time()}")
-
-        self.closing_browser()
 
 
 
