@@ -2,13 +2,9 @@
 # 🤖 LinkedIn Automation Bot 🌐
 
   
-
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat-square&logo=python)
-
 ![Tkinter](https://img.shields.io/badge/Tkinter-GUI-orange?style=flat-square&logo=python)
-
 ![Selenium](https://img.shields.io/badge/Selenium-Web%20Automation-green?style=flat-square&logo=selenium)
-
 ![BeautifulSoup](https://img.shields.io/badge/BeautifulSoup-Web%20Scraping-red?style=flat-square)
 
   
