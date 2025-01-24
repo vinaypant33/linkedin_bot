@@ -34,28 +34,33 @@ This **LinkedIn Bot** is a powerful yet simple-to-use desktop application built 
 
 ## ⚙️ Installation and Setup
 1. Clone the repository:  
-   ```bash
+  
+   '''bash
    git clone https://github.com/vinaypant33/linkedin_bot.git
+   '''
 
 Install required Python packages:
 
-bash
-Copy
-Edit
+'''bash
 pip install -r requirements.txt
+'''
+
+
+
 Run the bot:
 
-bash
-Copy
-Edit
+
 python main_script.py
+
 Launch the GUI, input your LinkedIn credentials, and start automating! 🎉
 
 ⚠️ Disclaimer
 This bot is designed for educational purposes only. Use it responsibly and adhere to LinkedIn's Terms of Service. 🚨
 Overuse or misuse of this bot may lead to account restrictions.
+
 🖼️ Screenshots
 
+![alt text](image.png)
 
 
 🧑‍💻 Contributing
@@ -68,11 +73,3 @@ If you find this project helpful, please give it a star ⭐ on GitHub. Your supp
 For feedback or questions, reach out at: your.email@example.com
 
 Happy automating! 🤖✨
-
-yaml
-Copy
-Edit
-
----
-
-You can replace placeholders like `yourusername`, `your.email@example.com`, and screenshot links with your actual details. Let me know if you want any specific adjustments! 🚀
