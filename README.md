@@ -11,7 +11,7 @@
 
 ## 🚀 About the Project
 
-This **LinkedIn Bot** is a powerful yet simple-to-use desktop application built with `Tkinter`, `Selenium`, and `BeautifulSoup` to automate your LinkedIn activities efficiently. 🌟  
+This **Linkedin Bot** is a powerful yet simple-to-use desktop application built with `Tkinter - ttkbootstrap`, `Selenium`, and `BeautifulSoup` to automate your LinkedIn activities efficiently. 🌟  
 
   
 
