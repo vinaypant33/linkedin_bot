@@ -1,5 +1,5 @@
 
-# 🤖 LinkedIn Automation Bot 🌐
+# 🤖 Linkedin Automation Bot 🌐
 
   
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat-square&logo=python)
