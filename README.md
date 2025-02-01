@@ -49,7 +49,7 @@ This **Linkedin Bot** is a powerful yet simple-to-use desktop application built 
 
 ## 🛠️ Technologies Used
 
-- **Tkinter**: For creating a graphical user interface.  
+- **Tkinter**: For creating a graphical user interface.
 
 - **Selenium**: For automating browser actions.  
 
@@ -117,7 +117,7 @@ If you find this project helpful, please give it a star ⭐ on GitHub. Your supp
 
 📧 Contact
 
-For feedback or questions, reach out at: your.email@example.com
+For feedback or questions, reach out at: vinaypant24@gmail.com
 
   
 
