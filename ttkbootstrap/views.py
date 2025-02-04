@@ -27,7 +27,7 @@ sys.setrecursionlimit(1000)
 
 
 ### App Constants : 
-window_width  = 1200
+window_width  = 1050
 window_height  = 700
 current_theme = "darkly"
 
@@ -50,7 +50,7 @@ titlebar dark or light wouldbe done accordingly
 themename = "darkly"
 button_theme  = "dark"
 background_color  = "#241F1A"
-success_theme = "success"
+secondary_theme = "secondary"
 
 
 # Function to set the title of the application  :  Works only in windows : 
@@ -109,7 +109,8 @@ def check_button_check(x):
             else:
                 password_entry.configure(show="*")
 
-
+def seconds_scale_changed(x):
+        wait_seconds_value.configure(text=str(round(wait_seconds.get())) + " Seconds")  
 
 ## Main Window and Skeleton details : 
 window  = btk.Window(themename=themename)
@@ -158,18 +159,31 @@ home_button_frame  = btk.Frame(sidebar , height=window_height / 3  , bootstyle  
 jobs_button_frame  = btk.Frame(sidebar , height=window_height / 3 , bootstyle = button_theme)
 settings_button_frame = btk.Frame(sidebar , height=window_height / 3 , bootstyle  = button_theme)
 
-home_button_with_image  = btk.Button(home_button_frame  , image=connections_icon , compound="top" , bootstyle  = success_theme  , command= lambda :change_window("home_button"))
-jobs_button_with_image  = btk.Button(jobs_button_frame , image=jobs_icon , compound="top" , bootstyle  = success_theme , command= lambda : change_window("jobs_button"))
-settings_button_with_image  = btk.Button(settings_button_frame , image=settings_icon , compound="top" , bootstyle  = success_theme , command= lambda : change_window("settings_button"))
+home_button_with_image  = btk.Button(home_button_frame  , image=connections_icon , compound="top" , bootstyle  = secondary_theme  , command= lambda :change_window("home_button"))
+jobs_button_with_image  = btk.Button(jobs_button_frame , image=jobs_icon , compound="top" , bootstyle  = secondary_theme , command= lambda : change_window("jobs_button"))
+settings_button_with_image  = btk.Button(settings_button_frame , image=settings_icon , compound="top" , bootstyle  = secondary_theme , command= lambda : change_window("settings_button"))
 
 ### Frame wise controls : 
-username_entry  = btk.Entry(master=first_screen , textvariable=username_var , width=41)
-password_entry  = btk.Entry(master = first_screen , textvariable=password_var , width=41)
+username_entry  = btk.Entry(master=first_screen , textvariable=username_var , width=35)
+password_entry  = btk.Entry(master = first_screen , textvariable=password_var , width=35)
 showpasswordcheckbox = btk.Checkbutton(master = first_screen , text="Show Password" , variable=checkvar , command=checkbuttonclicked  ,bootstyle="square-toggle")
 
 
+page_depth_initial = btk.Spinbox(first_screen , from_=0 , to=1000 , textvariable=page_depth_variable_initial , width=13)
+page_depth_final  = btk.Spinbox(first_screen , from_=0 , to = 1000 , textvariable=page_depth_variable_final , width= 13)
 
 
+wait_seconds  = btk.Scale(first_screen , from_= 0 , to=60 , length=200 , command=seconds_scale_changed , value=6)
+wait_seconds_value  = btk.Label(first_screen , text=f"{wait_seconds.get()} Seconds" , width=8)
+retries_  = btk.Spinbox(first_screen , from_=0 , to=10 , width=13 , textvariable=retries_variable )
+
+keywords_box  = btk.Entry(first_screen ,textvariable=keywords_var , width=95)
+multiline_messagebox  = btk.Text(first_screen , width=95 , height=15 )
+
+start_button = btk.Button(first_screen , text="Start" , bootstyle  = btk.SUCCESS , width=21 )
+stop_button = btk.Button(first_screen , text="Stop" , bootstyle  = btk.DANGER , width=21 )
+reset_button = btk.Button(first_screen , text="Reset" , bootstyle  = btk.WARNING , width=21)
+pause_button  = btk.Button(first_screen , text="Pause" , bootstyle = btk.INFO , width=21)
 
 
 ## Configuring Controls :
@@ -186,13 +200,18 @@ settings_button_frame.pack_propagate(0)
 
 ## Binding Functions : 
 def sidebar_animation(expand , width):
+    global window_width
     if expand and width < 100:
         width +=10
+        window_width+=10
         sidebar.configure(width=width)
+        window.geometry(f"{window_width}x{window_height}")
         window.after(30 , lambda : sidebar_animation(True , width))
     elif expand == False and width > 50:
         width-=5 
+        window_width-=5
         sidebar.configure(width=width)
+        window.geometry(f"{window_width}x{window_height}")
         window.after(30 , lambda : sidebar_animation(False , width))
 
 def clear_password_box():
@@ -209,7 +228,8 @@ settings_button_frame.bind("<Enter>" , lambda x : sidebar_animation(expand=True 
 
 username_entry.bind("<FocusIn>" , lambda x : username_entry.delete(0 , 190))
 password_entry.bind("<FocusIn>" , lambda x : clear_password_box())
-
+password_entry.bind("<KeyRelease>" ,  check_button_check)
+keywords_box.bind("<FocusIn>" , lambda x : keywords_box.delete( 0 , tk.END))
 
 ## Tooltip for the widgets  : 
 # connections_button_tooltip = ToolTip(home_button_with_image , text="Click for Connections Page" , bootstyle="danger")
@@ -240,7 +260,22 @@ settings_button_with_image.pack(expand=True , fill=tk.BOTH)
 ##### Packing Frame wise controls : 
 username_entry.pack (side=tk.LEFT , anchor = tk.N , padx = 10 , pady=10)
 password_entry.pack(side=tk.LEFT , anchor=tk.N , pady=10 , padx= 10)
-showpasswordcheckbox.pack(side=tk.RIGHT , anchor=tk.N , pady=19 , padx=(0,30))
+showpasswordcheckbox.pack(side=tk.LEFT , anchor=tk.NW , pady=19 , padx=(16,30))
+
+page_depth_initial.place(x = 10 , y = 70)
+page_depth_final.place(x = 210 , y = 70)
+wait_seconds_value.place(x = 430 , y = 78)
+wait_seconds.place(x = 550 , y = 85)
+retries_.place(x = 800 , y = 70)
+
+keywords_box.place(x = 10 , y = 130)
+multiline_messagebox.place(x = 10 , y = 190)
+
+
+start_button.place(x = 10 , y = 600)
+stop_button.place(x = 254 , y = 600)
+reset_button.place(x = 494 , y  = 600)
+pause_button.place(x = 734 , y = 600)
 
 
 window.mainloop()
