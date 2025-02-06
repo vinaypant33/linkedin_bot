@@ -17,6 +17,7 @@ from PIL import Image , ImageTk
 
 ### Importing classes for the controls : 
 import home_class
+import settings as settings_page
 
 ## Setting up current directory in which the script would run :
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,8 +29,11 @@ sys.setrecursionlimit(1000)
 
 ### App Constants : 
 window_width  = 1050
-window_height  = 700
+window_height  = 680
 current_theme = "darkly"
+
+
+progressbar_value  = 0
 
 connections_image  = Image.open("connections.png")
 jobs_image  = Image.open("jobs.png")
@@ -51,6 +55,8 @@ themename = "darkly"
 button_theme  = "dark"
 background_color  = "#241F1A"
 secondary_theme = "secondary"
+
+
 
 
 # Function to set the title of the application  :  Works only in windows : 
@@ -111,6 +117,12 @@ def check_button_check(x):
 
 def seconds_scale_changed(x):
         wait_seconds_value.configure(text=str(round(wait_seconds.get())) + " Seconds")  
+
+
+def start_button_clicked():
+    global progressbar_value
+    progressbar_value+=10
+    progress_bar.configure(value=progressbar_value)
 
 ## Main Window and Skeleton details : 
 window  = btk.Window(themename=themename)
@@ -180,11 +192,12 @@ retries_  = btk.Spinbox(first_screen , from_=0 , to=10 , width=13 , textvariable
 keywords_box  = btk.Entry(first_screen ,textvariable=keywords_var , width=95)
 multiline_messagebox  = btk.Text(first_screen , width=95 , height=15 )
 
-start_button = btk.Button(first_screen , text="Start" , bootstyle  = btk.SUCCESS , width=21 )
+start_button = btk.Button(first_screen , text="Start" , bootstyle  = btk.SUCCESS , width=21 , command=start_button_clicked )
 stop_button = btk.Button(first_screen , text="Stop" , bootstyle  = btk.DANGER , width=21 )
 reset_button = btk.Button(first_screen , text="Reset" , bootstyle  = btk.WARNING , width=21)
 pause_button  = btk.Button(first_screen , text="Pause" , bootstyle = btk.INFO , width=21)
 
+progress_bar  = btk.Progressbar(first_screen ,value= 0 , bootstyle  = "danger-striped" , length=960)
 
 ## Configuring Controls :
 sidebar.pack_propagate(0)
@@ -233,6 +246,12 @@ keywords_box.bind("<FocusIn>" , lambda x : keywords_box.delete( 0 , tk.END))
 
 ## Tooltip for the widgets  : 
 # connections_button_tooltip = ToolTip(home_button_with_image , text="Click for Connections Page" , bootstyle="danger")
+connection_button_tooltip = ToolTip(home_button_with_image , text='Click for Connections Page' , bootstyle="primary")
+jobs_button_tooltip = ToolTip(jobs_button_with_image , text="Click for Jobs" , bootstyle="primary")
+settings_button_tooltip = ToolTip(settings_button_with_image , text="Click for Settings" , bootstyle="primary")
+initial_page_tooltip = ToolTip(page_depth_initial , text="Enter Initial Search Page Value" , bootstyle="primary")
+final_page_tooltip = ToolTip(page_depth_final , text="Enter Final Search Page Value" , bootstyle="primary")
+wait_seconds_tooltip = ToolTip(wait_seconds , text="Enter Sleep Time for Events to Happen" , bootstyle="primary")
 
 
 # Packing Controls  :
@@ -253,10 +272,6 @@ jobs_button_with_image.pack(expand=True , fill=tk.BOTH)
 settings_button_with_image.pack(expand=True , fill=tk.BOTH)
 
 
-
-
-
-
 ##### Packing Frame wise controls : 
 username_entry.pack (side=tk.LEFT , anchor = tk.N , padx = 10 , pady=10)
 password_entry.pack(side=tk.LEFT , anchor=tk.N , pady=10 , padx= 10)
@@ -271,11 +286,15 @@ retries_.place(x = 800 , y = 70)
 keywords_box.place(x = 10 , y = 130)
 multiline_messagebox.place(x = 10 , y = 190)
 
-
 start_button.place(x = 10 , y = 600)
 stop_button.place(x = 254 , y = 600)
 reset_button.place(x = 494 , y  = 600)
 pause_button.place(x = 734 , y = 600)
 
+progress_bar.place(x = 10 , y = 650)
+
+
+## Calling classes for the controls : 
+settings_page.Settings(third_screen)
 
 window.mainloop()
