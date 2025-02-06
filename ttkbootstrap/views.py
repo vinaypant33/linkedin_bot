@@ -51,6 +51,13 @@ Function would be used to dynamically change the theme for the application
 titlebar dark or light wouldbe done accordingly
 
 '''
+
+### Load file and Check for the details to be Preloaded in the application : 
+with open("settings.txt" , "r") as file:
+    text = file.readline()
+    print(text)
+    
+    
 themename = "darkly"
 button_theme  = "dark"
 background_color  = "#241F1A"

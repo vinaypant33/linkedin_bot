@@ -2,14 +2,65 @@ import tkinter as tk
 from tkinter import ttk  
 import ttkbootstrap as btk
 
-
+from ttkbootstrap.toast import ToastNotification
 
 
 class Settings():
 
-    def __init__(self , master):
-        self.master = master
 
+    def save_details(self):
+        self.current_username  = self.username_textbox.get()
+        self.current_password  = self.password_box.get()
+        self.current_keywords = self.keywords_textbox.get()
+
+
+        self.theme_value  = self.current_theme.get()
+
+        with open("settings.txt" , "w") as settings_file:
+            settings_file.write(self.current_username + ":" + self.current_password + ":" + self.current_keywords + ":" + str(self.theme_value))
+
+        message = ToastNotification("Linkedin Bot" , "Values Saved in settings File" , 3000)
+        message.show_toast()
+
+        self.username_textbox.delete( 0 ,tk.END)
+        self.password_box.delete( 0  , tk.END)
+        self.keywords_textbox.delete(0 , tk.END)
+        
+      
+
+        
+       
+
+    def value_change(self):
+
+        # print(self.current_theme.get())
+        if self.current_theme.get() == True:
+            self.theme_checkbox.configure(text="Current Theme : Dark")
+        else:
+            self.theme_checkbox.configure(text="Current Theme : Light")
+        
+
+
+        ## Check the theme box for current theme : and save in the ehckbox variable for now the variable is dark theme
+
+
+
+    def __init__(self , master , old_keyowrds_list  = [] , current_theme  = True):
+        self.master = master
+        self.keywords_list = []
+
+
+        if current_theme == False:
+            self.current_theme  = btk.BooleanVar(value  = False)
+        else:
+            self.current_theme = btk.BooleanVar(value=True)
+
+
+
+        # This to be changed later Will replace this with the actual database : Sqlite
+        for each in old_keyowrds_list:
+            self.keywords_list.append(each)
+        
         '''
         Controls that would be added in the application would be :
         save username textbox
@@ -28,11 +79,8 @@ class Settings():
         self.password_box  = btk.Entry(self.master , width=30)
         self.keywords_textbox = btk.Entry(self.master , width=30)
 
-        self.theme_checkbox  = btk.Checkbutton(self.master , bootstyle  = "square-toggle" , text="Current Theme : Dark")
-        self.save_button  = btk.Button(self.master , text="Save Details")
-
-
-
+        self.theme_checkbox  = btk.Checkbutton(self.master , bootstyle  = "square-toggle" , text="Current Theme : Dark" , variable=self.current_theme  , command=self.value_change)
+        self.save_button  = btk.Button(self.master , text="Save Details" , command=self.save_details)
 
 
         ## Pack and Place the data :
