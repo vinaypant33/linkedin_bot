@@ -13,6 +13,7 @@ import ctypes
 from PIL import Image , ImageTk
 
 
+from datetime import datetime
 
 
 ### Importing classes for the controls : 
@@ -43,7 +44,25 @@ connections = connections_image.resize((30 , 30))
 jobs  = jobs_image.resize((30 , 30))
 settings = settings_image.resize((30 , 30))
 
+global mode_numeral
+global themename
+global background_color
+themename = "darkly"
+button_theme  = "dark"
+background_color  = "#241F1A"
+secondary_theme = "secondary"
+mode_numeral  = 1
 
+global username_var
+global password_var
+
+# username_var = btk.StringVar(value="Enter Username")
+# password_var = btk.StringVar(value="Enter Password")
+# checkvar  = btk.BooleanVar(value=False)
+# page_depth_variable_initial  = btk.IntVar(value=0)
+# page_depth_variable_final  = btk.IntVar(value = 3)
+# retries_variable  = btk.IntVar(value  = 10)
+# keywords_var  = btk.StringVar(value="Enter Keywords")
 
 ### Function to set later :: 
 '''
@@ -53,28 +72,42 @@ titlebar dark or light wouldbe done accordingly
 '''
 
 ### Load file and Check for the details to be Preloaded in the application : 
-with open("settings.txt" , "r") as file:
-    text = file.readline()
-    print(text)
-    
-    
-themename = "darkly"
-button_theme  = "dark"
-background_color  = "#241F1A"
-secondary_theme = "secondary"
+try:
+     with open("settings.txt" , "r") as file:
 
+
+        text = file.readline()
+        username  = text.split(":")[0]
+        message = text.split(":")[1]
+        keywords  = text.split(":")[2]
+        theme = text.split(":")[3]
+        
+        if theme == "False":
+            mode_numeral = 1
+
+            current_theme = "darkly"
+           
+        elif theme == "True":
+            mode_numeral = 0
+            themename = "flatly"
+            background_color = "#F7F7F7"
+           
+except Exception as Error:
+    with open("error_file.txt" , "a") as file:
+         file.write(f"Error Occured {Error} :: {datetime.now()}")
 
 
 
 # Function to set the title of the application  :  Works only in windows : 
-def set_dark_titlebar(window , mode_numeral = 1):
+def set_dark_titlebar(window , mode_numeral):
     try:
         window.update_idletasks()
         hwnd  = ctypes.windll.user32.GetParent(window.winfo_id())
         DWMWA_USE_IMMERSIVE_DARK_MODE = 20
         ctypes.windll.dwmapi.DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ctypes.byref(ctypes.c_int(mode_numeral)), ctypes.sizeof(ctypes.c_int(1)))
     except Exception as Error:
-        print(f"Facing Error in Changing the Theme of the Application {Error}")
+        with open("error_file.txt" , "a") as file:
+            file.write(f"Facing Error in Changing the Theme of the Application {Error} :: {datetime.now()}")
 
 
 def change_window(window_name):
@@ -137,13 +170,22 @@ window  = btk.Window(themename=themename)
 
 
 ### Variables for the windows : 
+
 username_var = btk.StringVar(value="Enter Username")
+username_var.set(username)
 password_var = btk.StringVar(value="Enter Password")
 checkvar  = btk.BooleanVar(value=False)
 page_depth_variable_initial  = btk.IntVar(value=0)
 page_depth_variable_final  = btk.IntVar(value = 3)
 retries_variable  = btk.IntVar(value  = 10)
 keywords_var  = btk.StringVar(value="Enter Keywords")
+
+
+try:
+    keywords_var.set(keywords)
+except Exception as keywords_error:
+     with open("error_file.txt" , "a") as file:
+            file.write(f"Facing Error in Changing the Theme of the Application {keywords_error} :: {datetime.now()}")
 
 connections_icon = ImageTk.PhotoImage(connections)
 jobs_icon  = ImageTk.PhotoImage(jobs)
@@ -158,19 +200,17 @@ window.iconbitmap(r"linkedin_icon.ico")
 window.resizable(0 , 0)
 
 
-set_dark_titlebar(window  = window , mode_numeral=1)
+set_dark_titlebar(window  = window , mode_numeral=mode_numeral)
 window.geometry(f"{window_width}x{window_height}")
 
 
-### Styles : Window and Other Widgets : 
-style = btk.Style()
-style.configure("Custom.TFrame", background="#241F1A") 
+
 
 
 sidebar  = btk.Frame(window , height=window_height , width=50 ,bootstyle ="primary")
-first_screen  = btk.Frame(window , height=window_height , style="Custom.TFrame") # style="Custom.TFrame" this will be used later 
-second_screen = btk.Frame(window , height=window_height , style="Custom.TFrame")
-third_screen  = btk.Frame(window , height = window_height , style="Custom.TFrame")
+first_screen  = btk.Frame(window , height=window_height ) # style="Custom.TFrame" this will be used later 
+second_screen = btk.Frame(window , height=window_height)
+third_screen  = btk.Frame(window , height = window_height )
 
 
 ## Three Buttons with the images in sidebar :
@@ -198,6 +238,11 @@ retries_  = btk.Spinbox(first_screen , from_=0 , to=10 , width=13 , textvariable
 
 keywords_box  = btk.Entry(first_screen ,textvariable=keywords_var , width=95)
 multiline_messagebox  = btk.Text(first_screen , width=95 , height=15 )
+try:
+    multiline_messagebox.insert("1.0" , message)
+except Exception as message_exception:
+     with open("error_file.txt" , "a") as file:
+            file.write(f"Facing Error in Changing the Theme of the Application {message_exception} :: {datetime.now()}")
 
 start_button = btk.Button(first_screen , text="Start" , bootstyle  = btk.SUCCESS , width=21 , command=start_button_clicked )
 stop_button = btk.Button(first_screen , text="Stop" , bootstyle  = btk.DANGER , width=21 )

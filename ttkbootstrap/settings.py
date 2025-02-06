@@ -10,14 +10,14 @@ class Settings():
 
     def save_details(self):
         self.current_username  = self.username_textbox.get()
-        self.current_password  = self.password_box.get()
+        self.current_message  = self.messagebox.get("1.0", "end-1c")
         self.current_keywords = self.keywords_textbox.get()
 
 
         self.theme_value  = self.current_theme.get()
 
         with open("settings.txt" , "w") as settings_file:
-            settings_file.write(self.current_username + ":" + self.current_password + ":" + self.current_keywords + ":" + str(self.theme_value))
+            settings_file.write(self.current_username + ":" + self.current_message + ":" + self.current_keywords + ":" + str(self.theme_value))
 
         message = ToastNotification("Linkedin Bot" , "Values Saved in settings File" , 3000)
         message.show_toast()
@@ -26,23 +26,18 @@ class Settings():
         self.password_box.delete( 0  , tk.END)
         self.keywords_textbox.delete(0 , tk.END)
         
-      
 
-        
        
 
     def value_change(self):
 
         # print(self.current_theme.get())
         if self.current_theme.get() == True:
-            self.theme_checkbox.configure(text="Current Theme : Dark")
-        else:
             self.theme_checkbox.configure(text="Current Theme : Light")
+        else:
+            self.theme_checkbox.configure(text="Current Theme : Dark")
         
-
-
         ## Check the theme box for current theme : and save in the ehckbox variable for now the variable is dark theme
-
 
 
     def __init__(self , master , old_keyowrds_list  = [] , current_theme  = True):
@@ -79,8 +74,11 @@ class Settings():
         self.password_box  = btk.Entry(self.master , width=30)
         self.keywords_textbox = btk.Entry(self.master , width=30)
 
-        self.theme_checkbox  = btk.Checkbutton(self.master , bootstyle  = "square-toggle" , text="Current Theme : Dark" , variable=self.current_theme  , command=self.value_change)
-        self.save_button  = btk.Button(self.master , text="Save Details" , command=self.save_details)
+        self.theme_checkbox  = btk.Checkbutton(self.master , bootstyle  = "square-toggle" , text="Current Theme :" , variable=self.current_theme  , command=self.value_change)
+
+        self.messagebox  = btk.Text(self.master , height=20)
+
+        self.save_button  = btk.Button(self.master , text="Save Details" , command=self.save_details )
 
 
         ## Pack and Place the data :
@@ -89,5 +87,6 @@ class Settings():
         self.keywords_textbox.pack(side=tk.LEFT , anchor=tk.NW , padx=10 , pady=10)
         self.theme_checkbox.place(x = 10 , y = 70)
         self.save_button.place(x = 10 , y = 120)
+        self.messagebox.place(x = 10 , y  = 180)
 
 
