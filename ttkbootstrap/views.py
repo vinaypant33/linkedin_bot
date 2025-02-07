@@ -15,10 +15,14 @@ from PIL import Image , ImageTk
 
 from datetime import datetime
 
+from pubsub import pub  
+
 
 ### Importing classes for the controls : 
 import home_class
 import settings as settings_page
+
+import selenium_script
 
 ## Setting up current directory in which the script would run :
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -75,7 +79,7 @@ titlebar dark or light wouldbe done accordingly
 try:
      with open("settings.txt" , "r") as file:
 
-
+        global keywords
         text = file.readline()
         username  = text.split(":")[0]
         message = text.split(":")[1]
@@ -160,9 +164,33 @@ def seconds_scale_changed(x):
 
 
 def start_button_clicked():
-    global progressbar_value
-    progressbar_value+=10
-    progress_bar.configure(value=progressbar_value)
+    # global progressbar_value
+    # progressbar_value+=10
+    # progress_bar.step(0.3)
+    # progress_bar.configure(value=progressbar_value)
+    username = username_entry.get()
+    password  = password_entry.get()
+    keywords = keywords_box.get()
+    message  = multiline_messagebox.get("1.0", "end-1c")
+    final_range  = int(page_depth_final.get())
+    final_wait_seconds = int(retries_.get())
+    sleep_seconds = int(round(wait_seconds.get()))
+
+    global selenium_thread
+    selenium_thread  = selenium_script.Selenium_bot(name="Selenium_Thread" , username=username , password=password , keywords=keywords , 
+                                                    message=message , final_range=final_range , waitseconds=final_wait_seconds , sleepseconds=sleep_seconds)
+    selenium_thread.start()
+
+
+    # main_thread = selenium_script.Selenium_bot(name  = "Thread-1" , username="vinaypant24@gmail.com" , password="HimanshuPant@2290"  , keywords="HR Ireland" , message="I am the message" , final_range=10 , waitseconds=5)
+
+    # main_thread.start()
+
+def stop_button_clicked():
+     selenium_thread.stop()
+
+def change_progressbar(value):
+    progress_bar.step(value)
 
 ## Main Window and Skeleton details : 
 window  = btk.Window(themename=themename)
@@ -182,10 +210,11 @@ keywords_var  = btk.StringVar(value="Enter Keywords")
 
 
 try:
+    
     keywords_var.set(keywords)
 except Exception as keywords_error:
      with open("error_file.txt" , "a") as file:
-            file.write(f"Facing Error in Changing the Theme of the Application {keywords_error} :: {datetime.now()}")
+            file.writelines(f"Facing Error in Changing the Theme of the Application {keywords_error} :: {datetime.now()}")
 
 connections_icon = ImageTk.PhotoImage(connections)
 jobs_icon  = ImageTk.PhotoImage(jobs)
@@ -242,10 +271,10 @@ try:
     multiline_messagebox.insert("1.0" , message)
 except Exception as message_exception:
      with open("error_file.txt" , "a") as file:
-            file.write(f"Facing Error in Changing the Theme of the Application {message_exception} :: {datetime.now()}")
+            file.writelines(f"Facing Error in Changing the Theme of the Application {message_exception} :: {datetime.now()}")
 
 start_button = btk.Button(first_screen , text="Start" , bootstyle  = btk.SUCCESS , width=21 , command=start_button_clicked )
-stop_button = btk.Button(first_screen , text="Stop" , bootstyle  = btk.DANGER , width=21 )
+stop_button = btk.Button(first_screen , text="Stop" , bootstyle  = btk.DANGER , width=21 , command=stop_button_clicked )
 reset_button = btk.Button(first_screen , text="Reset" , bootstyle  = btk.WARNING , width=21)
 pause_button  = btk.Button(first_screen , text="Pause" , bootstyle = btk.INFO , width=21)
 
@@ -348,5 +377,8 @@ progress_bar.place(x = 10 , y = 650)
 
 ## Calling classes for the controls : 
 settings_page.Settings(third_screen)
+
+
+pub.subscribe(change_progressbar , "progressupdate")
 
 window.mainloop()
