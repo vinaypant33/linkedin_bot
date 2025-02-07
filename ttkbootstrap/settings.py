@@ -25,6 +25,7 @@ class Settings():
         self.username_textbox.delete( 0 ,tk.END)
         self.password_box.delete( 0  , tk.END)
         self.keywords_textbox.delete(0 , tk.END)
+        self.messagebox.delete("1.0", tk.END)
         
 
        

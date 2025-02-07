@@ -115,6 +115,11 @@ class Selenium_bot(Thread):
                     self.bot.close()
                     sys.exit
 
+                completion_toast  = ToastNotification("Linkedin Bot" , "Request Sending Completed")
+                self.bot.close()
+                sys.exit
+
+
 
                 
             
@@ -123,8 +128,5 @@ class Selenium_bot(Thread):
         self.bot.close()
         print("The Thread is stopped")
         sys.exit
-
-
-
 
 

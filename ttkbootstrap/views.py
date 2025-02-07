@@ -76,21 +76,21 @@ titlebar dark or light wouldbe done accordingly
 '''
 
 ### Load file and Check for the details to be Preloaded in the application : 
+
 try:
      with open("settings.txt" , "r") as file:
 
-        global keywords
-        text = file.readline()
+        # global keywords
+        text = file.read()
         username  = text.split(":")[0]
         message = text.split(":")[1]
         keywords  = text.split(":")[2]
+        print(f"The kwyrods as : {keywords}")
         theme = text.split(":")[3]
         
         if theme == "False":
             mode_numeral = 1
-
             current_theme = "darkly"
-           
         elif theme == "True":
             mode_numeral = 0
             themename = "flatly"
@@ -99,6 +99,7 @@ try:
 except Exception as Error:
     with open("error_file.txt" , "a") as file:
          file.write(f"Error Occured {Error} :: {datetime.now()}")
+    print(f"Error Occured {Error}")
 
 
 
@@ -262,7 +263,7 @@ page_depth_final  = btk.Spinbox(first_screen , from_=0 , to = 1000 , textvariabl
 
 
 wait_seconds  = btk.Scale(first_screen , from_= 0 , to=60 , length=200 , command=seconds_scale_changed , value=6)
-wait_seconds_value  = btk.Label(first_screen , text=f"{wait_seconds.get()} Seconds" , width=8)
+wait_seconds_value  = btk.Label(first_screen , text=f"{wait_seconds.get()}:Seconds" , width=10)
 retries_  = btk.Spinbox(first_screen , from_=0 , to=10 , width=13 , textvariable=retries_variable )
 
 keywords_box  = btk.Entry(first_screen ,textvariable=keywords_var , width=95)
@@ -360,8 +361,8 @@ showpasswordcheckbox.pack(side=tk.LEFT , anchor=tk.NW , pady=19 , padx=(16,30))
 
 page_depth_initial.place(x = 10 , y = 70)
 page_depth_final.place(x = 210 , y = 70)
-wait_seconds_value.place(x = 430 , y = 78)
-wait_seconds.place(x = 550 , y = 85)
+wait_seconds_value.place(x = 400 , y = 78)
+wait_seconds.place(x = 555 , y = 85)
 retries_.place(x = 800 , y = 70)
 
 keywords_box.place(x = 10 , y = 130)
