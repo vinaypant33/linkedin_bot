@@ -11,17 +11,13 @@ import os
 import sys
 import time
 import threading
-
 import pyautogui
 from bs4 import BeautifulSoup
 from ttkbootstrap.toast import ToastNotification # For showing the error messages
-
 from threading import Thread
-
 from datetime import datetime
-
 from pubsub import pub
-
+from bs4 import BeautifulSoup
 
 class Selenium_bot(Thread):
 
@@ -40,6 +36,13 @@ class Selenium_bot(Thread):
         self.final_range = final_range
         self.wait_seconds  = waitseconds
         self.sleep_seconds  = sleepseconds
+
+
+        ### List to save the all links the completed links and the Uncompleted Links : 
+        self.all_links  = []
+        self.completeed_links  = []
+        self.pending_links = []
+
 
 
 
@@ -102,20 +105,46 @@ class Selenium_bot(Thread):
 
 
                 try:
-                    for i in range(1 , self.final_range):
+                    for i in range(1 , self.final_range + 1):
                         self.bot.get(f"https://www.linkedin.com/search/results/people/?keywords={self.keywords}&page={i}")
                         WebDriverWait(self.bot , self.wait_seconds).until( lambda d : d.execute_script("return document.readyState") == "complete")
                         sleep(1)
                         progress_Step = 50 // self.final_range
                         pub.sendMessage("progressupdate" ,value =  progress_Step)
+                        ### Collect all the links from the page source and store it in the links list : 
+                        source  = self.bot.page_source
+                        soup  = BeautifulSoup(source ,'html.parser')
+                        links = soup.find_all('a')
+                        for link in links:
+                            href = link.get('href')
+                            if href:
+                                if "www.linkedin.com/in/" in href:
+                                    self.all_links.append(href)
                 except Exception as page_load_error:
                     with open ("error_file.txt" , "a") as file:
                         file.writelines(f"Error in Login {page_load_error} ::  {datetime.time} \n")
                     print(f"Login Second Error  :: {page_load_error}")
                     self.bot.close()
                     sys.exit
+                
 
-                completion_toast  = ToastNotification("Linkedin Bot" , "Request Sending Completed")
+                ### Remove the Duplicates from the link list and start sending requests : 
+                self.all_links = list(set(self.all_links))
+                for each in self.all_links:
+                    with open("link_file.txt" ,"a") as links_file:
+                        links_file.writelines(f"{each} +\n")
+
+
+                ### Links Collected and saved to the file : Starting sending requests:
+                for each in self.all_links:
+                    self.bot.get(f"{each}")
+
+
+
+                completion_toast  = ToastNotification("Linkedin Bot" , "Request Sending Completed" , 5000)
+                completion_toast.show_toast()
+                pub.sendMessage("completed")
+                sleep(5)
                 self.bot.close()
                 sys.exit
 

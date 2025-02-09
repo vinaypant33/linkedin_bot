@@ -169,6 +169,7 @@ def start_button_clicked():
     # progressbar_value+=10
     # progress_bar.step(0.3)
     # progress_bar.configure(value=progressbar_value)
+    progress_bar.configure(value=0)
     username = username_entry.get()
     password  = password_entry.get()
     keywords = keywords_box.get()
@@ -192,6 +193,9 @@ def stop_button_clicked():
 
 def change_progressbar(value):
     progress_bar.step(value)
+
+def reset_progressbar():
+    progress_bar.configure(value=0)
 
 ## Main Window and Skeleton details : 
 window  = btk.Window(themename=themename)
@@ -381,5 +385,6 @@ settings_page.Settings(third_screen)
 
 
 pub.subscribe(change_progressbar , "progressupdate")
+pub.subscribe(reset_progressbar , "completed")
 
 window.mainloop()
