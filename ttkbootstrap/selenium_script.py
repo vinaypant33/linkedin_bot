@@ -19,6 +19,8 @@ from datetime import datetime
 from pubsub import pub
 from bs4 import BeautifulSoup
 
+pyautogui.FAILSAFE = False
+
 class Selenium_bot(Thread):
 
 
@@ -47,6 +49,10 @@ class Selenium_bot(Thread):
         self.connect_button_image  = r"connect_button.png"
         self.add_button_image  = r"add_note_button.png"
         self.send_button_image  = r"send_button.png"
+        self.keep_login_image  = r"keep_login.png"
+        self.more_button = r"more_button.png"
+        self.second_connect  = r"second_connect.png"
+
 
 
 
@@ -85,21 +91,32 @@ class Selenium_bot(Thread):
                     self.bot.close()
                     sys.exit
 
+                
                 ## Check for the remember me box and then click the singin button
                 try:
                     # window_position = self.bot.get_window_size()
-                    click_location = self.bot.find_element(By.ID , "rememberMeOptIn-checkbox").location
-                    x = click_location['x']
-                    y = click_location['y']
-                    pyautogui.moveTo(364 + x , 403 + y , 2)
+                    # click_location = self.bot.find_element(By.ID , "rememberMeOptIn-checkbox").location
+                    click_location  = pyautogui.locateOnScreen(self.keep_login_image , confidence=0.9)
+                    # x = click_location['x']
+                    # y = click_location['y']
+                    x  = click_location.left + 30
+                    y = click_location.top +  30
+                    pyautogui.moveTo( x ,  y , 2)
                     pyautogui.click()
-                    sleep(1)
-                    self.bot.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
-                    sleep(1)
                 except Exception as Click_Error:
                     with open ("error_file.txt" , "a") as file:
                         file.writelines(f"Error in Login {Click_Error} :: {datetime.now()} \n")
                     print(f"Login Second Error  :: {Click_Error}")
+                    
+
+                try:
+                    sleep(1)
+                    self.bot.find_element(By.XPATH , '//*[@id="organic-div"]/form/div[4]/button').click()
+                    sleep(1)
+                except Exception as Button_Click_Error:
+                    with open("error_file.txt" , "a") as file:
+                        file.writelines(f"Error in Login {Click_Error} :: {datetime.now()} \n")
+                    print(f"Login Button Error :: {Button_Click_Error}")
                     self.bot.close()
                     sys.exit
 
@@ -139,10 +156,11 @@ class Selenium_bot(Thread):
                         links_file.writelines(f"{each} +\n")
 
 
+
                 ### Links Collected and saved to the file : Starting sending requests:
                 for each in self.all_links:
                     self.bot.get(f"{each}")
-                    pyautogui.moveTo(300 , 300 , 1)
+                    pyautogui.moveTo(300 , 300 , 2)
                     # Get the name of the user : 
                     try:
                         current_name  = self.bot.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
@@ -182,7 +200,38 @@ class Selenium_bot(Thread):
                         pyautogui.click()
                         sleep(1)
                     except Exception as screen_error:
-                        print("Unable to find the button")
+                        # Check for the other alternative for connect : and then connect to the second button :
+                        try:
+                            more_location  = pyautogui.locateOnScreen(self.more_button , confidence=0.9)
+                            pyautogui.moveTo(more_location.left +  30 , more_location.top + 30 , 1)
+                            pyautogui.click()
+                            sleep(1)
+                            another_connect_button  = pyautogui.locateOnScreen(self.second_connect ,  confidence=0.9)
+                            pyautogui.moveTo(another_connect_button.left  + 20 , another_connect_button.top + 20 , 2 )
+                            pyautogui.click()
+                            sleep(1)
+                            add_button = pyautogui.locateOnScreen(self.add_button_image , confidence=0.9)
+                            pyautogui.moveTo(add_button.left + 50 , add_button.top + 50 , 2)
+                            pyautogui.click()
+                            sleep(1)
+                            pyautogui.write(self.hi_text)
+                            pyautogui.press("enter")
+                            sleep(0.5)
+                            pyautogui.write(self.message)
+                            sleep(2)
+                            send_coordinates  = pyautogui.locateOnScreen(self.send_button_image , confidence=0.9)
+                            pyautogui.moveTo(send_coordinates.left + 30 , send_coordinates.top +  30 , 2)
+                            pyautogui.click()
+                            sleep(1)
+                        except Exception as final_error:
+                            with open("second_links.txt" , "a") as file:
+                                file.writelines(f"{each} \n")
+                            print("None Method Working")
+                            with open ("error_file.txt" , "a") as file:
+                                file.writelines(f"None of the methods are working ::  {final_error} :: {datetime.now()} \n")
+
+
+
 
 
 
