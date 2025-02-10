@@ -43,6 +43,10 @@ class Selenium_bot(Thread):
         self.completeed_links  = []
         self.pending_links = []
 
+        ### Import the images for the connect, More, buttons : 
+        self.connect_button_image  = r"connect_button.png"
+        self.add_button_image  = r"add_note_button.png"
+        self.send_button_image  = r"send_button.png"
 
 
 
@@ -76,7 +80,7 @@ class Selenium_bot(Thread):
                     password.send_keys(self.password)
                 except Exception as Login_Error:
                     with open ("error_file.txt" , "a") as file:
-                        file.writelines(f"Error in Login {Login_Error} ::  {datetime.time} \n")
+                        file.writelines(f"Error in Login {Login_Error} ::  {datetime.now()} \n")
                     print(f"First Error in Login :: {Login_Error}")
                     self.bot.close()
                     sys.exit
@@ -94,7 +98,7 @@ class Selenium_bot(Thread):
                     sleep(1)
                 except Exception as Click_Error:
                     with open ("error_file.txt" , "a") as file:
-                        file.writelines(f"Error in Login {Click_Error} ::  {datetime.time} \n")
+                        file.writelines(f"Error in Login {Click_Error} :: {datetime.now()} \n")
                     print(f"Login Second Error  :: {Click_Error}")
                     self.bot.close()
                     sys.exit
@@ -122,7 +126,7 @@ class Selenium_bot(Thread):
                                     self.all_links.append(href)
                 except Exception as page_load_error:
                     with open ("error_file.txt" , "a") as file:
-                        file.writelines(f"Error in Login {page_load_error} ::  {datetime.time} \n")
+                        file.writelines(f"Error in Login {page_load_error} :: {datetime.now()} \n")
                     print(f"Login Second Error  :: {page_load_error}")
                     self.bot.close()
                     sys.exit
@@ -138,6 +142,48 @@ class Selenium_bot(Thread):
                 ### Links Collected and saved to the file : Starting sending requests:
                 for each in self.all_links:
                     self.bot.get(f"{each}")
+                    pyautogui.moveTo(300 , 300 , 1)
+                    # Get the name of the user : 
+                    try:
+                        current_name  = self.bot.find_element(By.XPATH , '/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1')
+                        self.current_name  = current_name.get_attribute('innerText')
+                        self.current_name = self.current_name.split(" ")[0]
+                        self.hi_text  = f"Hi {self.current_name},"
+                    except Exception as name_error:
+                        try:
+                            current_name  = self.bot.find_element(By.XPATH , "/html/body/div[6]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1")
+                            self.current_name  = current_name.get_attribute('innerText')
+                            self.current_name = self.current_name.split(" ")[0]
+                            self.hi_text  = f"Hi {self.current_name},"
+                        except Exception as Name_Error:
+                            with open ("error_file.txt" , "a") as file:
+                                file.writelines(f"Unable to find the name of the user  {Name_Error} :: {datetime.now()} \n")
+                            print(f"Name Finding Error  :: {Name_Error}")
+                            self.hi_text = "Hi,"
+                
+                    ### Check for the connect button and Move Mouse there if the button is available : 
+                    try:
+                        ## Check for the connect button image :
+                        connect_location = pyautogui.locateOnScreen(self.connect_button_image , confidence=0.9)
+                        pyautogui.moveTo(connect_location.left + 50 , connect_location.top + 50 , 2)
+                        pyautogui.click()
+                        sleep(1)
+                        add_button = pyautogui.locateOnScreen(self.add_button_image , confidence=0.9)
+                        pyautogui.moveTo(add_button.left + 50 , add_button.top + 50 , 2)
+                        pyautogui.click()
+                        sleep(1)
+                        pyautogui.write(self.hi_text)
+                        pyautogui.press("enter")
+                        sleep(0.5)
+                        pyautogui.write(self.message)
+                        sleep(2)
+                        send_coordinates  = pyautogui.locateOnScreen(self.send_button_image , confidence=0.9)
+                        pyautogui.moveTo(send_coordinates.left + 30 , send_coordinates.top +  30 , 2)
+                        pyautogui.click()
+                        sleep(1)
+                    except Exception as screen_error:
+                        print("Unable to find the button")
+
 
 
 

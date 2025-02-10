@@ -85,7 +85,6 @@ try:
         username  = text.split(":")[0]
         message = text.split(":")[1]
         keywords  = text.split(":")[2]
-        print(f"The kwyrods as : {keywords}")
         theme = text.split(":")[3]
         
         if theme == "False":
