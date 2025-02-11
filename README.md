@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 🚀 Run the bot:
 
-python main_script.py
+python views.py
 
 🎉 Launch the GUI, enter your Linkedin credentials, and start automating!
 
