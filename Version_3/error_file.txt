@@ -1,0 +1,82 @@
+None of the methods are working ::   :: 2025-04-18 19:01:12.317856 
+None of the methods are working ::   :: 2025-04-18 19:01:27.582770 
+None of the methods are working ::   :: 2025-04-18 19:02:08.183789 
+None of the methods are working ::   :: 2025-04-18 19:02:22.958836 
+None of the methods are working ::   :: 2025-04-18 19:02:39.008523 
+Unable to find the name of the user  Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div[6]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1"}
+  (Session info: chrome=135.0.7049.96); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF78CE85355+78597]
+	GetHandleVerifier [0x00007FF78CE853B0+78688]
+	(No symbol) [0x00007FF78CC391AA]
+	(No symbol) [0x00007FF78CC8F149]
+	(No symbol) [0x00007FF78CC8F3FC]
+	(No symbol) [0x00007FF78CCE2467]
+	(No symbol) [0x00007FF78CCB712F]
+	(No symbol) [0x00007FF78CCDF2BB]
+	(No symbol) [0x00007FF78CCB6EC3]
+	(No symbol) [0x00007FF78CC803F8]
+	(No symbol) [0x00007FF78CC81163]
+	GetHandleVerifier [0x00007FF78D12EF0D+2870973]
+	GetHandleVerifier [0x00007FF78D1296B8+2848360]
+	GetHandleVerifier [0x00007FF78D146993+2967875]
+	GetHandleVerifier [0x00007FF78CEA019A+188746]
+	GetHandleVerifier [0x00007FF78CEA847F+222255]
+	GetHandleVerifier [0x00007FF78CE8D2D4+111236]
+	GetHandleVerifier [0x00007FF78CE8D482+111666]
+	GetHandleVerifier [0x00007FF78CE735A9+5465]
+	BaseThreadInitThunk [0x00007FFB065EE8D7+23]
+	RtlUserThreadStart [0x00007FFB07D114FC+44]
+ :: 2025-04-18 19:03:12.299461 
+None of the methods are working ::   :: 2025-04-18 19:03:12.752054 
+Unable to find the name of the user  Message: no such element: Unable to locate element: {"method":"xpath","selector":"/html/body/div[6]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[1]/span[1]/a/h1"}
+  (Session info: chrome=135.0.7049.96); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF78CE85355+78597]
+	GetHandleVerifier [0x00007FF78CE853B0+78688]
+	(No symbol) [0x00007FF78CC391AA]
+	(No symbol) [0x00007FF78CC8F149]
+	(No symbol) [0x00007FF78CC8F3FC]
+	(No symbol) [0x00007FF78CCE2467]
+	(No symbol) [0x00007FF78CCB712F]
+	(No symbol) [0x00007FF78CCDF2BB]
+	(No symbol) [0x00007FF78CCB6EC3]
+	(No symbol) [0x00007FF78CC803F8]
+	(No symbol) [0x00007FF78CC81163]
+	GetHandleVerifier [0x00007FF78D12EF0D+2870973]
+	GetHandleVerifier [0x00007FF78D1296B8+2848360]
+	GetHandleVerifier [0x00007FF78D146993+2967875]
+	GetHandleVerifier [0x00007FF78CEA019A+188746]
+	GetHandleVerifier [0x00007FF78CEA847F+222255]
+	GetHandleVerifier [0x00007FF78CE8D2D4+111236]
+	GetHandleVerifier [0x00007FF78CE8D482+111666]
+	GetHandleVerifier [0x00007FF78CE735A9+5465]
+	BaseThreadInitThunk [0x00007FFB065EE8D7+23]
+	RtlUserThreadStart [0x00007FFB07D114FC+44]
+ :: 2025-04-18 19:03:17.491115 
+None of the methods are working ::   :: 2025-04-18 19:03:17.920546 
+Unable to find the name of the user  Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=135.0.7049.96)
+Stacktrace:
+	GetHandleVerifier [0x00007FF78CE85355+78597]
+	GetHandleVerifier [0x00007FF78CE853B0+78688]
+	(No symbol) [0x00007FF78CC391AA]
+	(No symbol) [0x00007FF78CC11B63]
+	(No symbol) [0x00007FF78CCBEB6E]
+	(No symbol) [0x00007FF78CCDEBB2]
+	(No symbol) [0x00007FF78CCB6EC3]
+	(No symbol) [0x00007FF78CC803F8]
+	(No symbol) [0x00007FF78CC81163]
+	GetHandleVerifier [0x00007FF78D12EF0D+2870973]
+	GetHandleVerifier [0x00007FF78D1296B8+2848360]
+	GetHandleVerifier [0x00007FF78D146993+2967875]
+	GetHandleVerifier [0x00007FF78CEA019A+188746]
+	GetHandleVerifier [0x00007FF78CEA847F+222255]
+	GetHandleVerifier [0x00007FF78CE8D2D4+111236]
+	GetHandleVerifier [0x00007FF78CE8D482+111666]
+	GetHandleVerifier [0x00007FF78CE735A9+5465]
+	BaseThreadInitThunk [0x00007FFB065EE8D7+23]
+	RtlUserThreadStart [0x00007FFB07D114FC+44]
+ :: 2025-04-18 19:05:01.904135 
+None of the methods are working ::   :: 2025-04-18 19:05:02.362843 
